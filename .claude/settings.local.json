@@ -29,7 +29,8 @@
       "Bash(pnpm test:unit:*)",
       "Bash(pnpm test:performance:*)",
       "Bash(pnpm test:fuzz:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(gh auth:*)"
     ],
     "deny": ["Bash(tree:*)"],
     "ask": []
