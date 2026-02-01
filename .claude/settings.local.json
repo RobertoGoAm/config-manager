@@ -19,11 +19,19 @@
       "Bash(mkdir:*)",
       "Bash(mv:*)",
       "Bash(git add:*)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nRefactor: migrate to Nuxt 4 app/ directory structure\n\n- Move app.vue into app/ directory\n- Move pages/ into app/ directory\n- Keep server/ at root (as per Nuxt 4 spec)\n- This improves file watcher performance and IDE context\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+      "Bash(git commit -m:*)",
+      "SlashCommand(/pr)",
+      "Bash(git push:*)",
+      "Bash(cat:*)",
+      "Bash(pnpm format:check:*)",
+      "Bash(pnpm format:*)",
+      "Bash(pnpm lint:ci:*)",
+      "Bash(pnpm test:unit:*)",
+      "Bash(pnpm test:performance:*)",
+      "Bash(pnpm test:fuzz:*)",
+      "Bash(chmod:*)"
     ],
-    "deny": [
-      "Bash(tree:*)"
-    ],
+    "deny": ["Bash(tree:*)"],
     "ask": []
   }
 }
