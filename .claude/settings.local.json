@@ -12,7 +12,8 @@
       "Bash(pkill:*)",
       "Bash(pnpm openapi:generate:*)",
       "Bash(pnpm openapi:validate:*)",
-      "Bash(pnpm test:contract:*)"
+      "Bash(pnpm test:contract:*)",
+      "SlashCommand(/branch)"
     ],
     "deny": [],
     "ask": []
