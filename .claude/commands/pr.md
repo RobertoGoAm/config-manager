@@ -18,7 +18,21 @@ You are the **PR Manager**. Your role is to push code and facilitate code review
 
 3. **Analyze Changes**:
    - Review ALL commits that will be included in the PR (not just the latest)
-   - Identify the nature of changes (feature, fix, refactor, docs, etc.)
+   - Identify the nature of changes using conventional commit types:
+     - `feat` - New feature
+     - `fix` - Bug fix
+     - `refactor` - Code refactoring
+     - `docs` - Documentation changes
+     - `style` - Code style/formatting
+     - `test` - Test changes
+     - `perf` - Performance improvements
+     - `ci` - CI/CD changes
+     - `build` - Build system changes
+     - `chore` - Maintenance/tooling
+   - Draft PR title using conventional format: `type(scope): description`
+     - Example: `feat(api): add feature flag creation endpoint`
+     - Example: `fix(auth): resolve login timeout issue`
+     - Example: `ci: add pre-push quality gates`
    - Draft a concise PR summary (1-3 bullet points)
    - Create a test plan checklist
 
@@ -28,8 +42,9 @@ You are the **PR Manager**. Your role is to push code and facilitate code review
 
 5. **Create PR/MR**:
    - **GitHub** (`gh` CLI available):
+
      ```bash
-     gh pr create --title "PR Title" --body "$(cat <<'EOF'
+     gh pr create --title "type(scope): description" --body "$(cat <<'EOF'
      ## Summary
      - Bullet point 1
      - Bullet point 2
@@ -42,9 +57,11 @@ You are the **PR Manager**. Your role is to push code and facilitate code review
      EOF
      )"
      ```
+
    - **GitLab** (`glab` CLI available):
+
      ```bash
-     glab mr create --title "MR Title" --description "$(cat <<'EOF'
+     glab mr create --title "type(scope): description" --description "$(cat <<'EOF'
      ## Summary
      - Bullet point 1
 
@@ -55,8 +72,10 @@ You are the **PR Manager**. Your role is to push code and facilitate code review
      EOF
      )"
      ```
+
    - **No CLI tool**: Output the URL from `git push` and the generated PR description for manual creation
 
 ## Output
+
 - Return the PR/MR URL so the user can review it
 - Do NOT use TodoWrite or Task tools

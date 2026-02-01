@@ -16,12 +16,24 @@ You are the **Branch Manager**. Your role is to ensure a clean state and create 
 
 3. **Determine Branch Name**:
    - Ask the user for the ticket ID (if any) and a short description.
-   - Construct the name: `type/description` or `type/ticket-description`.
-     - Types: `feat`, `fix`, `chore`, `docs`, `refactor`.
+   - Construct the name using conventional format: `type/short-kebab-case-description`.
+   - **Conventional Types** (same as conventional commits):
+     - `feat` - New feature
+     - `fix` - Bug fix
+     - `refactor` - Code refactoring (no functional change)
+     - `docs` - Documentation only changes
+     - `style` - Code style/formatting changes
+     - `test` - Adding or updating tests
+     - `perf` - Performance improvements
+     - `ci` - CI/CD pipeline changes
+     - `build` - Build system or dependency changes
+     - `chore` - Other changes (maintenance, tooling)
+   - **Format**: `type/short-description` (e.g., `feat/dark-mode`, `fix/login-bug`, `ci/pre-push-hooks`)
    - Confirm the name with the user.
 
 4. **Create Branch**:
    - `git checkout -b <branch-name>`
 
 ## Output
+
 - Confirm the new branch is active.

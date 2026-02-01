@@ -48,6 +48,7 @@ config-manager/
 2. **Apps** = Specific deployment configurations (API server, web frontend, mobile, etc.)
 
 **Benefits:**
+
 - Nuxt can import `@domain`, `@infrastructure`, `@api` directly (type-safe SSR)
 - Easy to migrate frontend (replace `apps/web` without touching packages)
 - Can deploy as monolith OR split into microservices
@@ -56,6 +57,7 @@ config-manager/
 ## Paradigm: STRICT Functional Programming
 
 **Absolute Rules:**
+
 - NO `class` keyword
 - NO `let` or `var` (only `const`)
 - NO `throw` statements (use `Effect.fail`)
@@ -65,6 +67,7 @@ config-manager/
 - ALL errors are typed and handled via Effect
 
 **Effect Library is Mandatory:**
+
 - Use `Effect.gen` for sequential operations
 - Use `pipe` for data transformations
 - Use `Effect.all` for parallel operations
@@ -74,6 +77,7 @@ config-manager/
 ## Type Safety Configuration
 
 The TypeScript configuration enforces maximum strictness:
+
 - `strict: true`
 - `noUncheckedIndexedAccess: true` - Array/object access returns `T | undefined`
 - `exactOptionalPropertyTypes: true` - Distinguishes between `undefined` and missing properties
@@ -110,6 +114,7 @@ import { createServer } from "@api/server.js"
 **Enforcement: TypeScript will fail the build if you violate dependencies.**
 
 For example:
+
 ```typescript
 // In packages/domain/src/logic/FeatureFlag.ts
 import { InMemoryRepo } from "@infrastructure/..." // ❌ BUILD FAILS!
@@ -123,28 +128,33 @@ import { InMemoryRepo } from "@infrastructure/..." // ❌ BUILD FAILS!
 ### Test Types (Organized by Purpose)
 
 **1. Unit Tests** (`test/unit/`)
+
 - Property-based testing with `fast-check` for domain logic
 - Generate thousands of random inputs to prove correctness
 - Focus on invariants that must always hold
 - 100% coverage requirement for `packages/domain/`
 
 **2. Integration Tests** (`test/integration/`)
+
 - Test cross-layer composition (domain + infrastructure)
 - Verify Effect composition across package boundaries
 - Test error propagation through layers
 
 **3. Contract Tests** (`test/contract/`)
 **CRITICAL: These prevent breaking changes to the API**
+
 - Lock down API field names (prevents `key` → `id` renames)
 - Lock down HTTP status codes (prevents 201 → 200 changes)
 - Lock down error response formats
 - **If AI changes the API, these tests WILL fail**
 
 **4. E2E Tests** (`test/e2e/`)
+
 - Playwright tests for critical user journeys
 - Run against live server
 
 **Future Test Types** (directories created, tests pending):
+
 - `test/performance/` - Benchmarks
 - `test/concurrency/` - Race conditions & parallel access
 - `test/fuzz/` - Malformed/adversarial inputs
@@ -160,45 +170,75 @@ import { InMemoryRepo } from "@infrastructure/..." // ❌ BUILD FAILS!
 
 ```bash
 # Development
-pnpm dev                 # Start Nuxt frontend (default)
-pnpm dev:web             # Start Nuxt frontend (explicit)
-pnpm dev:api             # Start standalone API server
-pnpm build               # Build all packages + apps
-pnpm build:web           # Build Nuxt only
-pnpm build:api           # Build API server only
+pnpm dev                      # Start Nuxt frontend (default)
+pnpm dev:web                  # Start Nuxt frontend (explicit)
+pnpm dev:api                  # Start standalone API server
+pnpm build                    # Build all packages + apps
+pnpm build:web                # Build Nuxt only
+pnpm build:api                # Build API server only
 
 # Type Checking
-pnpm typecheck           # Type-check all packages
+pnpm typecheck                # Type-check all packages
 
 # Testing (Vitest)
-pnpm test                # Run all unit/integration/contract tests
-pnpm test:watch          # Run tests in watch mode
-pnpm test:unit           # Run only unit tests
-pnpm test:integration    # Run only integration tests
-pnpm test:contract       # Run only contract tests (includes OpenAPI)
-pnpm test:coverage       # Run tests with coverage report
-pnpm test:e2e            # Run Playwright E2E tests
+pnpm test                     # Run all unit/integration/contract tests
+pnpm test:watch               # Run all tests in watch mode
+pnpm test:unit                # Run only unit tests
+pnpm test:unit:watch          # Run unit tests in watch mode
+pnpm test:integration         # Run only integration tests
+pnpm test:integration:watch   # Run integration tests in watch mode
+pnpm test:contract            # Run only contract tests (includes OpenAPI)
+pnpm test:contract:watch      # Run contract tests in watch mode
+pnpm test:performance         # Run only performance/benchmark tests
+pnpm test:performance:watch   # Run performance tests in watch mode
+pnpm test:concurrency         # Run only concurrency/race condition tests
+pnpm test:concurrency:watch   # Run concurrency tests in watch mode
+pnpm test:fuzz                # Run only fuzz tests (malformed inputs)
+pnpm test:fuzz:watch          # Run fuzz tests in watch mode
+pnpm test:metamorphic         # Run only metamorphic tests (relationship laws)
+pnpm test:metamorphic:watch   # Run metamorphic tests in watch mode
+pnpm test:regression          # Run only regression tests (bug reproductions)
+pnpm test:regression:watch    # Run regression tests in watch mode
+pnpm test:invariants          # Run only invariant tests (system-wide rules)
+pnpm test:invariants:watch    # Run invariant tests in watch mode
+pnpm test:chaos               # Run only chaos tests (fault injection)
+pnpm test:chaos:watch         # Run chaos tests in watch mode
+pnpm test:snapshot            # Run only snapshot tests (golden outputs)
+pnpm test:snapshot:watch      # Run snapshot tests in watch mode
+pnpm test:compliance          # Run only compliance tests (audit/regulatory)
+pnpm test:compliance:watch    # Run compliance tests in watch mode
+pnpm test:state-machine       # Run only state machine tests (lifecycle)
+pnpm test:state-machine:watch # Run state machine tests in watch mode
+pnpm test:e2e                 # Run Playwright E2E tests
+pnpm test:coverage            # Run tests with coverage report
+pnpm test:ci                  # Run tests with verbose CI reporter
 
 # OpenAPI Workflow
-pnpm openapi:lint        # Lint OpenAPI spec with Spectral
-pnpm openapi:validate    # Validate OpenAPI spec (strict)
-pnpm openapi:generate    # Generate TypeScript types from OpenAPI
+pnpm openapi:lint             # Lint OpenAPI spec with Spectral
+pnpm openapi:validate         # Validate OpenAPI spec (strict)
+pnpm openapi:generate         # Generate TypeScript types from OpenAPI
 
-# Linting
-pnpm lint                # Run ESLint with functional rules
-pnpm lint:fix            # Auto-fix linting issues
+# Linting & Formatting
+pnpm lint                     # Run ESLint with functional rules
+pnpm lint:fix                 # Auto-fix linting issues
+pnpm lint:ci                  # Run ESLint with max-warnings=0 for CI
+pnpm format                   # Format all files with Prettier
+pnpm format:check             # Check formatting without modifying
+pnpm format:ci                # Check formatting for CI
 
-# Quality Gates (must pass before commit)
-pnpm check               # typecheck + lint + openapi:validate + test
+# Quality Gates
+pnpm check                    # typecheck + lint + format:check + openapi:validate + test
+pnpm ci                       # Full CI suite (typecheck + lint:ci + format:ci + openapi:validate + test:ci + test:e2e)
 
 # Maintenance
-pnpm clean               # Remove all node_modules, dist, .nuxt, .output
-pnpm clean:install       # Clean + fresh install
+pnpm clean                    # Remove all node_modules, dist, .nuxt, .output
+pnpm clean:install            # Clean + fresh install
 ```
 
 ## ESLint Configuration
 
 The project uses `eslint-plugin-functional` with strict rules:
+
 - `functional/no-let`: No mutable bindings
 - `functional/no-class`: No classes
 - `functional/no-loop-statements`: No loops
@@ -207,6 +247,68 @@ The project uses `eslint-plugin-functional` with strict rules:
 - `functional/prefer-immutable-types`: Enforce readonly
 
 **If ESLint flags your code, rewrite it functionally. Do not disable rules.**
+
+## Conventional Commits and Branches
+
+This project enforces **conventional commits** and **conventional branch naming** for consistency and automated tooling.
+
+### Commit Message Format
+
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+**Types:**
+
+- `feat` - New feature
+- `fix` - Bug fix
+- `refactor` - Code refactoring (no functional change)
+- `docs` - Documentation only changes
+- `style` - Code style/formatting changes
+- `test` - Adding or updating tests
+- `perf` - Performance improvements
+- `ci` - CI/CD pipeline changes
+- `build` - Build system or dependency changes
+- `chore` - Other changes (maintenance, tooling)
+
+**Examples:**
+
+```bash
+feat(api): add feature flag creation endpoint
+
+fix(auth): resolve login timeout issue
+
+ci: add pre-push quality gates
+
+docs(readme): update installation instructions
+
+refactor(domain): simplify evaluation logic
+```
+
+### Branch Naming Format
+
+```
+<type>/<short-kebab-case-description>
+```
+
+Use the same types as conventional commits.
+
+**Examples:**
+
+- `feat/dark-mode`
+- `fix/login-bug`
+- `refactor/nuxt4-structure`
+- `ci/pre-push-hooks`
+- `docs/api-documentation`
+
+### Using Slash Commands
+
+- `/branch` - Creates a new branch following conventional naming
+- `/pr` - Creates a pull request with conventional commit title format
 
 ## Development Workflow
 
@@ -238,9 +340,7 @@ type User = typeof User.Type
 import { Effect } from "effect"
 
 const divideEffect = (a: number, b: number) =>
-  b === 0
-    ? Effect.fail(new Error("Division by zero"))
-    : Effect.succeed(a / b)
+  b === 0 ? Effect.fail(new Error("Division by zero")) : Effect.succeed(a / b)
 
 // Compose effects
 const program = Effect.gen(function* () {
@@ -253,11 +353,12 @@ const program = Effect.gen(function* () {
 
 ```typescript
 const Rule: Schema.Schema<Rule> = Schema.Recursive(
-  (self) => Schema.Union(
-    Schema.Struct({ op: Schema.Literal("EQ"), field: Schema.String, value: Schema.Unknown }),
-    Schema.Struct({ op: Schema.Literal("AND"), rules: Schema.Array(self) }),
-  ),
-  { identifier: "Rule" }
+  (self) =>
+    Schema.Union(
+      Schema.Struct({ op: Schema.Literal("EQ"), field: Schema.String, value: Schema.Unknown }),
+      Schema.Struct({ op: Schema.Literal("AND"), rules: Schema.Array(self) }),
+    ),
+  { identifier: "Rule" },
 )
 ```
 
