@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Config Manager</h1>
-    <p>Nuxt frontend with direct access to domain packages</p>
+    <p>Nuxt 4 frontend with direct access to domain packages</p>
     <NuxtPage />
   </div>
 </template>

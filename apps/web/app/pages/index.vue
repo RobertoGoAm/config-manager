@@ -1,7 +1,7 @@
 <template>
   <div style="padding: 2rem; font-family: sans-serif">
     <h1>Feature Flag Manager</h1>
-    <p>Functional monolith with Nuxt frontend</p>
+    <p>Functional monolith with Nuxt 4 frontend</p>
 
     <div style="margin: 2rem 0; padding: 1rem; background: #f5f5f5; border-radius: 4px">
       <h2>Create Feature Flag</h2>

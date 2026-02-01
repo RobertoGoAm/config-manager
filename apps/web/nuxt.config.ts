@@ -5,11 +5,6 @@ const rootDir = fileURLToPath(new URL('.', import.meta.url))
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  // Nuxt 4 specific
-  future: {
-    compatibilityVersion: 4,
-  },
-
   compatibilityDate: '2025-01-31',
   devtools: { enabled: true },
 
