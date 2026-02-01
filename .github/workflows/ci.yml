@@ -121,9 +121,8 @@ jobs:
       - name: Validate OpenAPI spec
         run: pnpm openapi:validate
 
-  # Step 4: Medium - Build packages (required for typecheck and e2e)
-  # Note: Build MUST come before typecheck because TypeScript project references
-  # require packages to be built first to generate .d.ts declaration files
+  # Step 4: Medium - Build packages (includes type checking)
+  # Note: tsc -b and nuxt build already perform type checking, so no separate typecheck step needed
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -170,58 +169,11 @@ jobs:
             apps/web/.output
           key: ${{ runner.os }}-build-${{ github.sha }}
 
-  # Step 5: Typecheck (depends on build for .d.ts files)
-  typecheck:
-    name: Type Check
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - name: Setup pnpm cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Restore build artifacts
-        uses: actions/cache@v4
-        with:
-          path: |
-            packages/*/dist
-            apps/web/.output
-          key: ${{ runner.os }}-build-${{ github.sha }}
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Type check
-        run: pnpm typecheck
-
-  # Step 6: Run all tests (unit, integration, contract)
+  # Step 5: Run all tests (unit, integration, contract)
   test:
     name: Tests
     runs-on: ubuntu-latest
-    needs: typecheck
+    needs: build
 
     steps:
       - name: Checkout code
@@ -262,7 +214,7 @@ jobs:
       - name: Run contract tests
         run: pnpm test:contract
 
-  # Step 7: Most expensive - E2E tests (browser automation, needs build)
+  # Step 6: Most expensive - E2E tests (browser automation, needs build)
   e2e:
     name: End-to-End Tests
     runs-on: ubuntu-latest

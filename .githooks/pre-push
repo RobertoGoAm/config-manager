@@ -10,8 +10,7 @@ echo ""
 # - format:check (fastest - file comparison)
 # - lint (fast - static analysis)
 # - openapi:validate (fast - schema validation)
-# - build (medium - required for typecheck)
-# - typecheck (medium - needs build artifacts)
+# - build (medium - includes type checking via tsc -b and nuxt build)
 # - test (medium - unit/integration/contract)
 # - test:e2e (slowest - browser automation)
 pnpm check
