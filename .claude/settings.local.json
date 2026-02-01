@@ -32,11 +32,10 @@
       "Bash(chmod:*)",
       "Bash(gh auth:*)",
       "Bash(pnpm tsc:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(git commit:*)"
     ],
-    "deny": [
-      "Bash(tree:*)"
-    ],
+    "deny": ["Bash(tree:*)"],
     "ask": []
   }
 }
