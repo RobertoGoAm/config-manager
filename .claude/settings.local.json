@@ -1,7 +1,6 @@
 {
   "permissions": {
     "allow": [
-      "Bash(tree:*)",
       "Bash(node --version:*)",
       "Bash(fnm use:*)",
       "Bash(pnpm typecheck:*)",
@@ -13,9 +12,18 @@
       "Bash(pnpm openapi:generate:*)",
       "Bash(pnpm openapi:validate:*)",
       "Bash(pnpm test:contract:*)",
-      "SlashCommand(/branch)"
+      "SlashCommand(/branch)",
+      "Bash(git pull:*)",
+      "Bash(git checkout:*)",
+      "WebSearch",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nRefactor: migrate to Nuxt 4 app/ directory structure\n\n- Move app.vue into app/ directory\n- Move pages/ into app/ directory\n- Keep server/ at root (as per Nuxt 4 spec)\n- This improves file watcher performance and IDE context\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
-    "deny": [],
+    "deny": [
+      "Bash(tree:*)"
+    ],
     "ask": []
   }
 }
