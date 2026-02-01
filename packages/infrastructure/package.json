@@ -1,0 +1,22 @@
+{
+  "name": "@config-manager/infrastructure",
+  "version": "0.1.0",
+  "description": "Infrastructure adapters - implements domain ports",
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    "./db/*": "./src/db/*.ts"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@config-manager/domain": "workspace:*",
+    "effect": "^3.19.15",
+    "@effect/platform": "^0.94.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}

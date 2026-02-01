@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(node --version:*)",
+      "Bash(fnm use:*)",
+      "Bash(pnpm typecheck:*)",
+      "Bash(pnpm build)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm check:*)",
+      "Bash(pkill:*)",
+      "Bash(pnpm openapi:generate:*)",
+      "Bash(pnpm openapi:validate:*)",
+      "Bash(pnpm test:contract:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

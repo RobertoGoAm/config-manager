@@ -1,0 +1,60 @@
+{
+  "name": "config-manager-workspace",
+  "version": "0.1.0",
+  "description": "High-assurance Configuration Management System with strict functional programming",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "pnpm --filter @config-manager/web dev",
+    "dev:web": "pnpm --filter @config-manager/web dev",
+    "dev:api": "pnpm --filter @config-manager/server dev",
+    "build": "pnpm -r build",
+    "build:web": "pnpm --filter @config-manager/web build",
+    "build:api": "pnpm --filter @config-manager/server build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "test:unit": "vitest run test/unit",
+    "test:integration": "vitest run test/integration",
+    "test:contract": "vitest run test/contract",
+    "test:e2e": "playwright test",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "openapi:lint": "spectral lint docs/openapi/openapi.yaml",
+    "openapi:generate": "openapi-typescript docs/openapi/openapi.yaml -o packages/infrastructure/src/http/types/api.d.ts",
+    "openapi:validate": "spectral lint docs/openapi/openapi.yaml --ruleset docs/openapi/.spectral.yaml",
+    "check": "pnpm typecheck && pnpm lint && pnpm openapi:validate && pnpm test",
+    "clean": "rm -rf node_modules packages/*/node_modules apps/*/node_modules packages/*/dist apps/*/dist apps/*/.nuxt apps/*/.output",
+    "clean:install": "pnpm clean && pnpm install"
+  },
+  "dependencies": {
+    "@effect/platform": "^0.94.2",
+    "@effect/platform-node": "^0.104.1",
+    "effect": "^3.19.15"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@stoplight/spectral-cli": "^6.13.1",
+    "@stoplight/spectral-core": "^1.21.0",
+    "@stoplight/spectral-ruleset-bundler": "^1.6.3",
+    "@stoplight/spectral-runtime": "^1.1.4",
+    "@types/node": "^22.10.5",
+    "@typescript-eslint/eslint-plugin": "^8.20.0",
+    "@typescript-eslint/parser": "^8.20.0",
+    "eslint": "^9.18.0",
+    "eslint-plugin-functional": "^7.2.0",
+    "fast-check": "^4.5.3",
+    "openapi-typescript": "^7.4.3",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

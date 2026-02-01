@@ -1,0 +1,28 @@
+extends: [[spectral:oas, all]]
+
+rules:
+  # Require operation IDs
+  operation-operationId: error
+
+  # Require descriptions
+  info-description: error
+  operation-description: error
+
+  # Require examples in request/response
+  operation-success-response: error
+
+  # Enforce tag usage
+  operation-tags: error
+  openapi-tags: error
+
+  # Security rules
+  oas3-api-servers: warn
+
+  # Custom rules for this project
+  tag-description:
+    description: Tags must have descriptions
+    given: $.tags[*]
+    severity: warn
+    then:
+      field: description
+      function: truthy
