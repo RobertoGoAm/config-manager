@@ -39,6 +39,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build all packages
+        run: pnpm build
+
       - name: Type check
         run: pnpm typecheck
 
@@ -50,9 +53,6 @@ jobs:
 
       - name: Validate OpenAPI
         run: pnpm openapi:validate
-
-      - name: Build all packages
-        run: pnpm build
 
   test:
     name: Tests
