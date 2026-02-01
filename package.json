@@ -56,8 +56,8 @@
     "openapi:lint": "spectral lint docs/openapi/openapi.yaml",
     "openapi:generate": "openapi-typescript docs/openapi/openapi.yaml -o packages/infrastructure/src/http/types/api.d.ts",
     "openapi:validate": "spectral lint docs/openapi/openapi.yaml --ruleset docs/openapi/.spectral.yaml",
-    "check": "pnpm build && pnpm typecheck && pnpm lint && pnpm format:check && pnpm openapi:validate && pnpm test",
-    "ci": "pnpm build && pnpm typecheck && pnpm lint:ci && pnpm format:ci && pnpm openapi:validate && pnpm test:ci && pnpm test:e2e",
+    "check": "pnpm format:check && pnpm lint && pnpm openapi:validate && pnpm build && pnpm typecheck && pnpm test && pnpm test:e2e",
+    "ci": "pnpm format:ci && pnpm lint:ci && pnpm openapi:validate && pnpm build && pnpm typecheck && pnpm test:ci && pnpm test:e2e",
     "clean": "rm -rf node_modules packages/*/node_modules apps/*/node_modules packages/*/dist apps/*/dist apps/*/.nuxt apps/*/.output",
     "clean:install": "pnpm clean && pnpm install",
     "install-hooks": "bash scripts/install-hooks.sh"

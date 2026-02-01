@@ -34,7 +34,8 @@
       "Bash(pnpm tsc:*)",
       "Bash(find:*)",
       "Bash(git commit:*)",
-      "Bash(pnpm install:*)"
+      "Bash(pnpm install:*)",
+      "Bash(pnpm test:e2e:*)"
     ],
     "deny": ["Bash(tree:*)"],
     "ask": []

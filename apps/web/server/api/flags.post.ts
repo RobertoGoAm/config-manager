@@ -13,12 +13,13 @@ import type { CreateFlagInput } from "@domain/schema/FeatureFlag"
  * - Can use Effect directly in Nuxt server routes
  */
 
+// Create repository once and reuse across requests
+// In production, this would be replaced with a real database
+const repository = createInMemoryFlagRepository()
+
 export default defineEventHandler(async (event) => {
   // Read request body with type safety
   const input = await readBody<CreateFlagInput>(event)
-
-  // Create repository
-  const repository = createInMemoryFlagRepository()
 
   // Use domain logic directly - no API calls needed!
   const program = createFeatureFlag(input, repository)
@@ -35,6 +36,7 @@ export default defineEventHandler(async (event) => {
         statusCode: 400,
         statusMessage: error._tag,
         message: error.reason,
+        data: { error: error._tag, message: error.reason },
       })
     }
 
@@ -43,6 +45,10 @@ export default defineEventHandler(async (event) => {
         statusCode: 409,
         statusMessage: "FlagAlreadyExistsError",
         message: `Flag with key '${error.key}' already exists`,
+        data: {
+          error: "FlagAlreadyExistsError",
+          message: `Flag with key '${error.key}' already exists`,
+        },
       })
     }
 
@@ -50,12 +56,14 @@ export default defineEventHandler(async (event) => {
       statusCode: 500,
       statusMessage: error._tag,
       message: error.message,
+      data: { error: error._tag, message: error.message },
     })
   }
 
   const flag = result.right
 
-  // Return success response
+  // Return success response with 201 Created status
+  setResponseStatus(event, 201)
   return {
     key: flag.key,
     defaultValue: flag.defaultValue,

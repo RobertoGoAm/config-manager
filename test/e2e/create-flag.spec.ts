@@ -44,7 +44,7 @@ test.describe("POST /api/flags - Create Feature Flag", () => {
 
     expect(response.status()).toBe(409) // Conflict
     const body = await response.json()
-    expect(body.error).toBe("FlagAlreadyExistsError")
+    expect(body.data.error).toBe("FlagAlreadyExistsError")
   })
 
   test("rejects non-kebab-case key", async ({ request }) => {
@@ -58,7 +58,7 @@ test.describe("POST /api/flags - Create Feature Flag", () => {
 
     expect(response.status()).toBe(400) // Bad Request
     const body = await response.json()
-    expect(body.error).toBe("InvalidFlagKeyError")
+    expect(body.data.error).toBe("InvalidFlagKeyError")
   })
 
   test("rejects empty description", async ({ request }) => {
@@ -72,7 +72,7 @@ test.describe("POST /api/flags - Create Feature Flag", () => {
 
     expect(response.status()).toBe(400) // Bad Request
     const body = await response.json()
-    expect(body.error).toBe("InvalidFlagDescriptionError")
+    expect(body.data.error).toBe("InvalidFlagDescriptionError")
   })
 
   test("rejects missing description", async ({ request }) => {
@@ -85,7 +85,7 @@ test.describe("POST /api/flags - Create Feature Flag", () => {
 
     expect(response.status()).toBe(400) // Bad Request
     const body = await response.json()
-    expect(body.error).toContain("Validation")
+    expect(body.data.error).toBe("InvalidFlagDescriptionError")
   })
 
   test("trims description whitespace", async ({ request }) => {
@@ -113,6 +113,6 @@ test.describe("POST /api/flags - Create Feature Flag", () => {
 
     expect(response.status()).toBe(400) // Bad Request
     const body = await response.json()
-    expect(body.error).toBe("InvalidFlagDescriptionError")
+    expect(body.data.error).toBe("InvalidFlagDescriptionError")
   })
 })

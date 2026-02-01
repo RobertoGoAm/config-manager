@@ -6,12 +6,14 @@
 echo "🔍 Running pre-push quality checks..."
 echo ""
 
-# Run the check command which includes:
-# - typecheck
-# - lint
-# - format:check
-# - openapi:validate
-# - test
+# Run the check command which includes (fastest to slowest):
+# - format:check (fastest - file comparison)
+# - lint (fast - static analysis)
+# - openapi:validate (fast - schema validation)
+# - build (medium - required for typecheck)
+# - typecheck (medium - needs build artifacts)
+# - test (medium - unit/integration/contract)
+# - test:e2e (slowest - browser automation)
 pnpm check
 
 if [ $? -ne 0 ]; then
