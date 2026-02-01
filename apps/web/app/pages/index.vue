@@ -105,7 +105,8 @@ const createFlag = async () => {
       body: form.value,
     })
 
-    result.value = data
+    // Type assertion: if no error thrown, response is FeatureFlagResponse
+    result.value = data as FeatureFlagResponse
     form.value = { key: "", description: "", defaultValue: false }
   } catch (e: any) {
     error.value = e.data?.message || e.message || "Unknown error"

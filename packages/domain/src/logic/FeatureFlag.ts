@@ -63,7 +63,16 @@ export const createFeatureFlag = (
       )
     }
 
-    // Validate description is non-empty after trimming
+    // Validate description exists and is non-empty after trimming
+    if (!input.description || typeof input.description !== "string") {
+      return yield* Effect.fail(
+        new InvalidFlagDescriptionError({
+          description: String(input.description || ""),
+          reason: "Description is required and must be a string",
+        }),
+      )
+    }
+
     const trimmedDescription = input.description.trim()
     if (trimmedDescription.length === 0) {
       return yield* Effect.fail(
