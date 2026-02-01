@@ -1,11 +1,11 @@
-import { fileURLToPath } from 'node:url'
-import { resolve } from 'node:path'
+import { fileURLToPath } from "node:url"
+import { resolve } from "node:path"
 
-const rootDir = fileURLToPath(new URL('.', import.meta.url))
+const rootDir = fileURLToPath(new URL(".", import.meta.url))
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2025-01-31',
+  compatibilityDate: "2025-01-31",
   devtools: { enabled: true },
 
   // TypeScript configuration
@@ -16,18 +16,18 @@ export default defineNuxtConfig({
 
   // Alias configuration for workspace packages
   alias: {
-    '@domain': resolve(rootDir, '../../packages/domain/src'),
-    '@infrastructure': resolve(rootDir, '../../packages/infrastructure/src'),
-    '@api': resolve(rootDir, '../../packages/api/src'),
+    "@domain": resolve(rootDir, "../../packages/domain/src"),
+    "@infrastructure": resolve(rootDir, "../../packages/infrastructure/src"),
+    "@api": resolve(rootDir, "../../packages/api/src"),
   },
 
   // Vite configuration
   vite: {
     resolve: {
       alias: {
-        '@domain': resolve(rootDir, '../../packages/domain/src'),
-        '@infrastructure': resolve(rootDir, '../../packages/infrastructure/src'),
-        '@api': resolve(rootDir, '../../packages/api/src'),
+        "@domain": resolve(rootDir, "../../packages/domain/src"),
+        "@infrastructure": resolve(rootDir, "../../packages/infrastructure/src"),
+        "@api": resolve(rootDir, "../../packages/api/src"),
       },
     },
   },

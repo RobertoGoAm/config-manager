@@ -1,7 +1,7 @@
-import { Effect } from 'effect'
-import { createFeatureFlag } from '@domain/logic/FeatureFlag'
-import { createInMemoryFlagRepository } from '@infrastructure/db/InMemoryFlagRepository'
-import type { CreateFlagInput } from '@domain/schema/FeatureFlag'
+import { Effect } from "effect"
+import { createFeatureFlag } from "@domain/logic/FeatureFlag"
+import { createInMemoryFlagRepository } from "@infrastructure/db/InMemoryFlagRepository"
+import type { CreateFlagInput } from "@domain/schema/FeatureFlag"
 
 /**
  * Nuxt Server API Route - POST /api/flags
@@ -24,15 +24,13 @@ export default defineEventHandler(async (event) => {
   const program = createFeatureFlag(input, repository)
 
   // Run the Effect program
-  const result = await Effect.runPromise(
-    program.pipe(Effect.either)
-  )
+  const result = await Effect.runPromise(program.pipe(Effect.either))
 
   // Handle result
-  if (result._tag === 'Left') {
+  if (result._tag === "Left") {
     const error = result.left
 
-    if (error._tag === 'InvalidFlagKeyError' || error._tag === 'InvalidFlagDescriptionError') {
+    if (error._tag === "InvalidFlagKeyError" || error._tag === "InvalidFlagDescriptionError") {
       throw createError({
         statusCode: 400,
         statusMessage: error._tag,
@@ -40,10 +38,10 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    if (error._tag === 'FlagAlreadyExistsError') {
+    if (error._tag === "FlagAlreadyExistsError") {
       throw createError({
         statusCode: 409,
-        statusMessage: 'FlagAlreadyExistsError',
+        statusMessage: "FlagAlreadyExistsError",
         message: `Flag with key '${error.key}' already exists`,
       })
     }

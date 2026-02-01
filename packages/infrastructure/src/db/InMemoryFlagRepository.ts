@@ -1,9 +1,6 @@
 import { Effect } from "effect"
 import type { FeatureFlag } from "@domain/schema/FeatureFlag.js"
-import {
-  FlagRepositoryError,
-  type FlagRepository,
-} from "@domain/logic/FeatureFlag.js"
+import { FlagRepositoryError, type FlagRepository } from "@domain/logic/FeatureFlag.js"
 
 /**
  * In-memory implementation of FlagRepository
@@ -19,9 +16,9 @@ export const createInMemoryFlagRepository = (): FlagRepository => {
           Effect.fail(
             new FlagRepositoryError({
               message: `Failed to check flag existence: ${String(error)}`,
-            })
-          )
-        )
+            }),
+          ),
+        ),
       ),
 
     save: (flag: FeatureFlag) =>
@@ -33,9 +30,9 @@ export const createInMemoryFlagRepository = (): FlagRepository => {
           Effect.fail(
             new FlagRepositoryError({
               message: `Failed to save flag: ${String(error)}`,
-            })
-          )
-        )
+            }),
+          ),
+        ),
       ),
   }
 }

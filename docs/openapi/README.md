@@ -14,6 +14,7 @@ This directory contains the OpenAPI 3.1 specification for the Config Manager API
 Edit `openapi.yaml` to add or modify API endpoints.
 
 **Best practices:**
+
 - Use kebab-case for paths (`/api/feature-flags`)
 - Include examples for all requests and responses
 - Document all error responses
@@ -41,6 +42,7 @@ pnpm openapi:generate
 **Output:** `packages/infrastructure/src/http/types/api.d.ts`
 
 **Benefits:**
+
 - Type-safe API client
 - Auto-completion in IDE
 - Compiler catches API contract violations
@@ -48,16 +50,16 @@ pnpm openapi:generate
 ### 4. Use Generated Types
 
 ```typescript
-import type { components, operations } from '@infrastructure/http/types/api'
+import type { components, operations } from "@infrastructure/http/types/api"
 
 // Request type
-type CreateFlagRequest = components['schemas']['CreateFlagInput']
+type CreateFlagRequest = components["schemas"]["CreateFlagInput"]
 
 // Response type
-type CreateFlagResponse = components['schemas']['FeatureFlag']
+type CreateFlagResponse = components["schemas"]["FeatureFlag"]
 
 // Operation type (includes request + response)
-type CreateFlagOp = operations['createFeatureFlag']
+type CreateFlagOp = operations["createFeatureFlag"]
 ```
 
 ## Contract Tests
@@ -69,12 +71,14 @@ pnpm test:contract
 ```
 
 **Tests verify:**
+
 - ✅ Spec is valid OpenAPI 3.1
 - ✅ All required fields present
 - ✅ Follows best practices (via Spectral)
 - ✅ Contract stability (field names, status codes)
 
 **Breaking changes caught:**
+
 - ❌ Renaming fields (`key` → `id`)
 - ❌ Changing status codes (201 → 200)
 - ❌ Removing required fields
@@ -131,12 +135,14 @@ npx @redocly/cli preview-docs docs/openapi/openapi.yaml
 ### Online
 
 Upload `openapi.yaml` to:
+
 - https://editor.swagger.io/
 - https://redocly.com/redoc/
 
 ## Adding New Endpoints
 
 1. **Define in OpenAPI** (`openapi.yaml`)
+
 ```yaml
 paths:
   /api/flags/{id}:
@@ -150,34 +156,38 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Feature flag found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FeatureFlag'
+                $ref: "#/components/schemas/FeatureFlag"
 ```
 
 2. **Validate**
+
 ```bash
 pnpm openapi:validate
 ```
 
 3. **Generate types**
+
 ```bash
 pnpm openapi:generate
 ```
 
 4. **Implement in code**
+
 ```typescript
 // packages/api/src/routes/flags.ts
-import type { operations } from '@infrastructure/http/types/api'
+import type { operations } from "@infrastructure/http/types/api"
 
-type GetFlagOp = operations['getFeatureFlag']
+type GetFlagOp = operations["getFeatureFlag"]
 // Now you have full type safety!
 ```
 
 5. **Add contract tests**
+
 ```typescript
 // test/contract/routes/get-flag.test.ts
 it("must return FeatureFlag schema", () => {
@@ -196,6 +206,7 @@ Run: `pnpm openapi:generate`
 Check the error output - it will tell you exactly what's wrong and where.
 
 Common issues:
+
 - Missing `operationId`
 - Missing `description`
 - Missing examples

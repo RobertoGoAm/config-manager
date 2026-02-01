@@ -103,22 +103,22 @@ describe("OpenAPI Specification", () => {
 
   describe("Response Codes", () => {
     it("should define 201 Created response", () => {
-      expect(openapiContent).toContain("'201':")
+      expect(openapiContent).toContain('"201":')
       expect(openapiContent).toContain("Feature flag created successfully")
     })
 
     it("should define 400 Bad Request response", () => {
-      expect(openapiContent).toContain("'400':")
+      expect(openapiContent).toContain('"400":')
       expect(openapiContent).toContain("Validation error")
     })
 
     it("should define 409 Conflict response", () => {
-      expect(openapiContent).toContain("'409':")
+      expect(openapiContent).toContain('"409":')
       expect(openapiContent).toContain("Flag already exists")
     })
 
     it("should define 500 Server Error response", () => {
-      expect(openapiContent).toContain("'500':")
+      expect(openapiContent).toContain('"500":')
     })
   })
 
@@ -131,7 +131,7 @@ describe("OpenAPI Specification", () => {
     })
 
     it("key field should have kebab-case pattern", () => {
-      expect(openapiContent).toContain("pattern: '^[a-z0-9]+(-[a-z0-9]+)*$'")
+      expect(openapiContent).toContain('pattern: "^[a-z0-9]+(-[a-z0-9]+)*$"')
     })
 
     it("description should have length constraints", () => {
@@ -196,9 +196,9 @@ describe("OpenAPI Specification", () => {
 
     it("should NOT change response status codes", () => {
       // Breaking change: changing status codes
-      const has201 = openapiContent.includes("'201':")
-      const has400 = openapiContent.includes("'400':")
-      const has409 = openapiContent.includes("'409':")
+      const has201 = openapiContent.includes('"201":')
+      const has400 = openapiContent.includes('"400":')
+      const has409 = openapiContent.includes('"409":')
 
       expect(has201).toBe(true)
       expect(has400).toBe(true)

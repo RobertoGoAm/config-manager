@@ -8,14 +8,14 @@
 
 <script setup lang="ts">
 // Example: importing domain types directly in the frontend!
-import type { Rule } from '@domain/schema/Rule'
+import type { Rule } from "@domain/schema/Rule"
 
 // TypeScript knows about domain types - full type safety!
 const exampleRule: Rule = {
-  op: 'EQ',
-  field: 'user.role',
-  value: 'admin'
+  op: "EQ",
+  field: "user.role",
+  value: "admin",
 }
 
-console.log('Example rule:', exampleRule)
+console.log("Example rule:", exampleRule)
 </script>

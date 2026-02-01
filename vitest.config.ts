@@ -18,12 +18,7 @@ export default defineConfig({
         "packages/infrastructure/src/**/*.ts",
         "packages/api/src/**/*.ts",
       ],
-      exclude: [
-        "**/*.test.ts",
-        "**/*.spec.ts",
-        "**/node_modules/**",
-        "**/dist/**",
-      ],
+      exclude: ["**/*.test.ts", "**/*.spec.ts", "**/node_modules/**", "**/dist/**"],
       thresholds: {
         lines: 100,
         functions: 100,

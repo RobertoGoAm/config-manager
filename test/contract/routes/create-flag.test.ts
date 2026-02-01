@@ -89,11 +89,7 @@ describe("POST /api/flags - API Contract", () => {
         details: expect.any(String),
       }
 
-      expect(Object.keys(expectedErrorResponse)).toEqual([
-        "error",
-        "message",
-        "details",
-      ])
+      expect(Object.keys(expectedErrorResponse)).toEqual(["error", "message", "details"])
     })
 
     it("status code must be 400 Bad Request", () => {
@@ -239,12 +235,7 @@ describe("POST /api/flags - API Contract", () => {
     it("must NOT remove fields from response", () => {
       // Breaking change: Removing 'description' from response
       const responseFields = ["key", "defaultValue", "description", "createdAt"]
-      expect(responseFields).toEqual([
-        "key",
-        "defaultValue",
-        "description",
-        "createdAt",
-      ])
+      expect(responseFields).toEqual(["key", "defaultValue", "description", "createdAt"])
     })
 
     it("must NOT change field types", () => {

@@ -59,7 +59,7 @@ export const createFeatureFlag = (
         new InvalidFlagKeyError({
           key: input.key,
           reason: "Key must be kebab-case: lowercase alphanumeric characters separated by hyphens",
-        })
+        }),
       )
     }
 
@@ -70,7 +70,7 @@ export const createFeatureFlag = (
         new InvalidFlagDescriptionError({
           description: input.description,
           reason: "Description cannot be empty",
-        })
+        }),
       )
     }
 
@@ -80,16 +80,14 @@ export const createFeatureFlag = (
         new InvalidFlagDescriptionError({
           description: input.description,
           reason: "Description cannot exceed 500 characters",
-        })
+        }),
       )
     }
 
     // Check uniqueness constraint
     const flagExists = yield* repository.exists(input.key)
     if (flagExists) {
-      return yield* Effect.fail(
-        new FlagAlreadyExistsError({ key: input.key })
-      )
+      return yield* Effect.fail(new FlagAlreadyExistsError({ key: input.key }))
     }
 
     // Construct flag with creation timestamp and trimmed description

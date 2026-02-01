@@ -5,14 +5,17 @@ This directory contains runnable applications built on top of the shared package
 ## Current Applications
 
 ### `server/` - Standalone API Server
+
 Runs the Effect-based HTTP API independently on port 3000.
 
 **Use cases:**
+
 - Developing the API without the frontend
 - Running the API separately in production
 - Testing and CI/CD
 
 **Commands:**
+
 ```bash
 pnpm --filter @config-manager/server dev    # Development
 pnpm --filter @config-manager/server build  # Production build
@@ -24,12 +27,15 @@ pnpm --filter @config-manager/server start  # Run production build
 ## Planned Applications
 
 ### `web/` - Nuxt Frontend (Coming Soon)
+
 Full-stack Nuxt application with:
+
 - SSR/SSG support
 - Nitro server integration
 - Direct access to `@domain`, `@infrastructure`, `@api` packages
 
 **Future structure:**
+
 ```
 apps/web/
 ├── app/                    # Nuxt app directory
@@ -47,6 +53,7 @@ apps/web/
 ```
 
 **Benefits of this architecture:**
+
 1. **Shared domain logic** - Nuxt server can import `@domain` directly (SSR-safe)
 2. **Type safety** - Share types between frontend and backend
 3. **Easy migration** - Frontend can be replaced with Next.js/SvelteKit without touching packages
@@ -76,6 +83,7 @@ packages/api             (Level 2: HTTP API)
 When you need to migrate from Nuxt → [Next.js/SvelteKit/etc]:
 
 **Option 1: Keep packages, replace frontend**
+
 ```bash
 rm -rf apps/web
 # Set up new frontend framework
@@ -83,6 +91,7 @@ rm -rf apps/web
 ```
 
 **Option 2: Extract API to microservice**
+
 ```bash
 # Keep packages/ and apps/server
 # Deploy apps/server as separate service

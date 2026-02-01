@@ -15,14 +15,11 @@ export const FlagKey = Schema.String.pipe(
  * Length limit is a security constraint to prevent DoS attacks
  */
 export const FlagDescription = Schema.String.pipe(
-  Schema.transform(
-    Schema.String,
-    {
-      strict: true,
-      decode: (s) => s.trim(),
-      encode: (s) => s,
-    }
-  ),
+  Schema.transform(Schema.String, {
+    strict: true,
+    decode: (s) => s.trim(),
+    encode: (s) => s,
+  }),
   Schema.minLength(1),
   Schema.maxLength(500),
 )

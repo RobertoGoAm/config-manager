@@ -1,7 +1,12 @@
 import { describe, it, expect } from "vitest"
 import { Effect } from "effect"
 import * as fc from "fast-check"
-import { createFeatureFlag, InvalidFlagKeyError, InvalidFlagDescriptionError, FlagAlreadyExistsError } from "@domain/logic/FeatureFlag.js"
+import {
+  createFeatureFlag,
+  InvalidFlagKeyError,
+  InvalidFlagDescriptionError,
+  FlagAlreadyExistsError,
+} from "@domain/logic/FeatureFlag.js"
 import { createInMemoryFlagRepository } from "@infrastructure/db/InMemoryFlagRepository.js"
 import type { CreateFlagInput } from "@domain/schema/FeatureFlag.js"
 
@@ -12,7 +17,7 @@ describe("createFeatureFlag", () => {
         fc.asyncProperty(
           fc.stringMatching(/^[a-z0-9]+(-[a-z0-9]+)*$/),
           fc.boolean(),
-          fc.string({ minLength: 1, maxLength: 500 }).filter(s => s.trim().length > 0),
+          fc.string({ minLength: 1, maxLength: 500 }).filter((s) => s.trim().length > 0),
           async (validKey, defaultValue, description) => {
             const repository = createInMemoryFlagRepository()
             const input: CreateFlagInput = {
@@ -22,9 +27,7 @@ describe("createFeatureFlag", () => {
             }
 
             const result = await Effect.runPromise(
-              createFeatureFlag(input, repository).pipe(
-                Effect.either
-              )
+              createFeatureFlag(input, repository).pipe(Effect.either),
             )
 
             // Should succeed without InvalidFlagKeyError
@@ -33,9 +36,9 @@ describe("createFeatureFlag", () => {
             } else {
               expect(result.right.key).toBe(validKey)
             }
-          }
+          },
         ),
-        { numRuns: 100 }
+        { numRuns: 100 },
       )
     })
   })
@@ -44,9 +47,9 @@ describe("createFeatureFlag", () => {
     it("rejects any key containing uppercase letters", () => {
       fc.assert(
         fc.asyncProperty(
-          fc.string({ minLength: 1 }).filter(s => /[A-Z]/.test(s)),
+          fc.string({ minLength: 1 }).filter((s) => /[A-Z]/.test(s)),
           fc.boolean(),
-          fc.string({ minLength: 1, maxLength: 500 }).filter(s => s.trim().length > 0),
+          fc.string({ minLength: 1, maxLength: 500 }).filter((s) => s.trim().length > 0),
           async (invalidKey, defaultValue, description) => {
             const repository = createInMemoryFlagRepository()
             const input: CreateFlagInput = {
@@ -56,9 +59,7 @@ describe("createFeatureFlag", () => {
             }
 
             const result = await Effect.runPromise(
-              createFeatureFlag(input, repository).pipe(
-                Effect.either
-              )
+              createFeatureFlag(input, repository).pipe(Effect.either),
             )
 
             // Should fail with InvalidFlagKeyError
@@ -66,9 +67,9 @@ describe("createFeatureFlag", () => {
             if (result._tag === "Left") {
               expect(result.left).toBeInstanceOf(InvalidFlagKeyError)
             }
-          }
+          },
         ),
-        { numRuns: 100 }
+        { numRuns: 100 },
       )
     })
   })
@@ -79,7 +80,7 @@ describe("createFeatureFlag", () => {
         fc.asyncProperty(
           fc.stringMatching(/^[a-z0-9]+(-[a-z0-9]+)*$/),
           fc.boolean(),
-          fc.string({ minLength: 1, maxLength: 500 }).filter(s => s.trim().length > 0),
+          fc.string({ minLength: 1, maxLength: 500 }).filter((s) => s.trim().length > 0),
           async (key, defaultValue, description) => {
             const repository = createInMemoryFlagRepository()
             const input: CreateFlagInput = {
@@ -90,25 +91,21 @@ describe("createFeatureFlag", () => {
 
             // First creation should succeed
             const firstResult = await Effect.runPromise(
-              createFeatureFlag(input, repository).pipe(
-                Effect.either
-              )
+              createFeatureFlag(input, repository).pipe(Effect.either),
             )
             expect(firstResult._tag).toBe("Right")
 
             // Second creation should fail with FlagAlreadyExistsError
             const secondResult = await Effect.runPromise(
-              createFeatureFlag(input, repository).pipe(
-                Effect.either
-              )
+              createFeatureFlag(input, repository).pipe(Effect.either),
             )
             expect(secondResult._tag).toBe("Left")
             if (secondResult._tag === "Left") {
               expect(secondResult.left).toBeInstanceOf(FlagAlreadyExistsError)
             }
-          }
+          },
         ),
-        { numRuns: 100 }
+        { numRuns: 100 },
       )
     })
   })
@@ -129,9 +126,7 @@ describe("createFeatureFlag", () => {
             }
 
             const result = await Effect.runPromise(
-              createFeatureFlag(input, repository).pipe(
-                Effect.either
-              )
+              createFeatureFlag(input, repository).pipe(Effect.either),
             )
 
             // Should fail with InvalidFlagDescriptionError
@@ -139,9 +134,9 @@ describe("createFeatureFlag", () => {
             if (result._tag === "Left") {
               expect(result.left).toBeInstanceOf(InvalidFlagDescriptionError)
             }
-          }
+          },
         ),
-        { numRuns: 100 }
+        { numRuns: 100 },
       )
     })
   })
@@ -152,7 +147,7 @@ describe("createFeatureFlag", () => {
         fc.asyncProperty(
           fc.stringMatching(/^[a-z0-9]+(-[a-z0-9]+)*$/),
           fc.boolean(),
-          fc.string({ minLength: 1, maxLength: 490 }).filter(s => s.trim().length > 0),
+          fc.string({ minLength: 1, maxLength: 490 }).filter((s) => s.trim().length > 0),
           async (key, defaultValue, desc) => {
             const repository = createInMemoryFlagRepository()
             const paddedDesc = `  ${desc}  `
@@ -163,9 +158,7 @@ describe("createFeatureFlag", () => {
             }
 
             const result = await Effect.runPromise(
-              createFeatureFlag(input, repository).pipe(
-                Effect.either
-              )
+              createFeatureFlag(input, repository).pipe(Effect.either),
             )
 
             // Should succeed and description should be trimmed
@@ -176,9 +169,9 @@ describe("createFeatureFlag", () => {
               expect(result.right.description).not.toMatch(/^\s/)
               expect(result.right.description).not.toMatch(/\s$/)
             }
-          }
+          },
         ),
-        { numRuns: 100 }
+        { numRuns: 100 },
       )
     })
   })
@@ -199,9 +192,7 @@ describe("createFeatureFlag", () => {
             }
 
             const result = await Effect.runPromise(
-              createFeatureFlag(input, repository).pipe(
-                Effect.either
-              )
+              createFeatureFlag(input, repository).pipe(Effect.either),
             )
 
             // Should fail with InvalidFlagDescriptionError
@@ -209,9 +200,9 @@ describe("createFeatureFlag", () => {
             if (result._tag === "Left") {
               expect(result.left).toBeInstanceOf(InvalidFlagDescriptionError)
             }
-          }
+          },
         ),
-        { numRuns: 50 }
+        { numRuns: 50 },
       )
     })
   })
@@ -222,7 +213,7 @@ describe("createFeatureFlag", () => {
         fc.asyncProperty(
           fc.stringMatching(/^[a-z0-9]+(-[a-z0-9]+)*$/),
           fc.boolean(),
-          fc.string({ minLength: 1, maxLength: 500 }).filter(s => s.trim().length > 0),
+          fc.string({ minLength: 1, maxLength: 500 }).filter((s) => s.trim().length > 0),
           async (key, defaultValue, description) => {
             const repository = createInMemoryFlagRepository()
             const before = new Date()
@@ -234,9 +225,7 @@ describe("createFeatureFlag", () => {
             }
 
             const result = await Effect.runPromise(
-              createFeatureFlag(input, repository).pipe(
-                Effect.either
-              )
+              createFeatureFlag(input, repository).pipe(Effect.either),
             )
 
             const after = new Date()
@@ -248,9 +237,9 @@ describe("createFeatureFlag", () => {
               expect(result.right.createdAt.getTime()).toBeGreaterThanOrEqual(before.getTime())
               expect(result.right.createdAt.getTime()).toBeLessThanOrEqual(after.getTime())
             }
-          }
+          },
         ),
-        { numRuns: 100 }
+        { numRuns: 100 },
       )
     })
   })
@@ -283,16 +272,14 @@ describe("createFeatureFlag", () => {
             }
 
             const result = await Effect.runPromise(
-              createFeatureFlag(input, repository).pipe(
-                Effect.either
-              )
+              createFeatureFlag(input, repository).pipe(Effect.either),
             )
 
             // Should always return Either (Left or Right), never throw
             expect(["Left", "Right"]).toContain(result._tag)
-          }
+          },
         ),
-        { numRuns: 100 }
+        { numRuns: 100 },
       )
     })
   })
@@ -307,7 +294,7 @@ describe("createFeatureFlag", () => {
       }
 
       const result = await Effect.runPromise(
-        createFeatureFlag(input, repository).pipe(Effect.either)
+        createFeatureFlag(input, repository).pipe(Effect.either),
       )
 
       expect(result._tag).toBe("Left")
@@ -325,7 +312,7 @@ describe("createFeatureFlag", () => {
       }
 
       const result = await Effect.runPromise(
-        createFeatureFlag(input, repository).pipe(Effect.either)
+        createFeatureFlag(input, repository).pipe(Effect.either),
       )
 
       expect(result._tag).toBe("Left")
@@ -343,7 +330,7 @@ describe("createFeatureFlag", () => {
       }
 
       const result = await Effect.runPromise(
-        createFeatureFlag(input, repository).pipe(Effect.either)
+        createFeatureFlag(input, repository).pipe(Effect.either),
       )
 
       expect(result._tag).toBe("Right")
@@ -361,7 +348,7 @@ describe("createFeatureFlag", () => {
       }
 
       const result = await Effect.runPromise(
-        createFeatureFlag(input, repository).pipe(Effect.either)
+        createFeatureFlag(input, repository).pipe(Effect.either),
       )
 
       expect(result._tag).toBe("Right")
@@ -379,7 +366,7 @@ describe("createFeatureFlag", () => {
       }
 
       const result = await Effect.runPromise(
-        createFeatureFlag(input, repository).pipe(Effect.either)
+        createFeatureFlag(input, repository).pipe(Effect.either),
       )
 
       expect(result._tag).toBe("Right")
@@ -397,7 +384,7 @@ describe("createFeatureFlag", () => {
       }
 
       const result = await Effect.runPromise(
-        createFeatureFlag(input, repository).pipe(Effect.either)
+        createFeatureFlag(input, repository).pipe(Effect.either),
       )
 
       expect(result._tag).toBe("Right")
