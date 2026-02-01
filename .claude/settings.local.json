@@ -33,7 +33,8 @@
       "Bash(gh auth:*)",
       "Bash(pnpm tsc:*)",
       "Bash(find:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(pnpm install:*)"
     ],
     "deny": ["Bash(tree:*)"],
     "ask": []
