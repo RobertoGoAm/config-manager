@@ -73,22 +73,23 @@ export const createFeatureFlag = (
       )
     }
 
+    // Security: Enforce length limit BEFORE trimming to prevent DoS attacks
+    // (attacker could send 10MB of whitespace that trims to valid length)
+    if (input.description.length > 500) {
+      return yield* Effect.fail(
+        new InvalidFlagDescriptionError({
+          description: input.description,
+          reason: "Description cannot exceed 500 characters",
+        }),
+      )
+    }
+
     const trimmedDescription = input.description.trim()
     if (trimmedDescription.length === 0) {
       return yield* Effect.fail(
         new InvalidFlagDescriptionError({
           description: input.description,
           reason: "Description cannot be empty",
-        }),
-      )
-    }
-
-    // Security: Enforce length limit to prevent DoS attacks
-    if (trimmedDescription.length > 500) {
-      return yield* Effect.fail(
-        new InvalidFlagDescriptionError({
-          description: input.description,
-          reason: "Description cannot exceed 500 characters",
         }),
       )
     }
