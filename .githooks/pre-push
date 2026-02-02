@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# Pre-push hook for config-manager
+# Runs quality checks before allowing push
+
+echo "🔍 Running pre-push quality checks..."
+echo ""
+
+# Run the check command which includes (fastest to slowest):
+# - format:check (fastest - file comparison)
+# - lint (fast - static analysis)
+# - openapi:validate (fast - schema validation)
+# - build (medium - includes type checking via tsc -b and nuxt build)
+# - test (medium - unit/integration/contract)
+# - test:e2e (slowest - browser automation)
+pnpm check
+
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "❌ Pre-push checks failed!"
+  echo "Please fix the issues above before pushing."
+  echo ""
+  echo "To skip this hook (NOT RECOMMENDED), use: git push --no-verify"
+  exit 1
+fi
+
+echo ""
+echo "✅ All checks passed! Proceeding with push..."
+exit 0

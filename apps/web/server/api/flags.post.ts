@@ -1,7 +1,7 @@
-import { Effect } from 'effect'
-import { createFeatureFlag } from '@domain/logic/FeatureFlag'
-import { createInMemoryFlagRepository } from '@infrastructure/db/InMemoryFlagRepository'
-import type { CreateFlagInput } from '@domain/schema/FeatureFlag'
+import { Effect } from "effect"
+import { createFeatureFlag } from "@domain/logic/FeatureFlag"
+import { createInMemoryFlagRepository } from "@infrastructure/db/InMemoryFlagRepository"
+import type { CreateFlagInput } from "@domain/schema/FeatureFlag"
 
 /**
  * Nuxt Server API Route - POST /api/flags
@@ -13,38 +13,42 @@ import type { CreateFlagInput } from '@domain/schema/FeatureFlag'
  * - Can use Effect directly in Nuxt server routes
  */
 
+// Create repository once and reuse across requests
+// In production, this would be replaced with a real database
+const repository = createInMemoryFlagRepository()
+
 export default defineEventHandler(async (event) => {
   // Read request body with type safety
   const input = await readBody<CreateFlagInput>(event)
-
-  // Create repository
-  const repository = createInMemoryFlagRepository()
 
   // Use domain logic directly - no API calls needed!
   const program = createFeatureFlag(input, repository)
 
   // Run the Effect program
-  const result = await Effect.runPromise(
-    program.pipe(Effect.either)
-  )
+  const result = await Effect.runPromise(program.pipe(Effect.either))
 
   // Handle result
-  if (result._tag === 'Left') {
+  if (result._tag === "Left") {
     const error = result.left
 
-    if (error._tag === 'InvalidFlagKeyError' || error._tag === 'InvalidFlagDescriptionError') {
+    if (error._tag === "InvalidFlagKeyError" || error._tag === "InvalidFlagDescriptionError") {
       throw createError({
         statusCode: 400,
         statusMessage: error._tag,
         message: error.reason,
+        data: { error: error._tag, message: error.reason },
       })
     }
 
-    if (error._tag === 'FlagAlreadyExistsError') {
+    if (error._tag === "FlagAlreadyExistsError") {
       throw createError({
         statusCode: 409,
-        statusMessage: 'FlagAlreadyExistsError',
+        statusMessage: "FlagAlreadyExistsError",
         message: `Flag with key '${error.key}' already exists`,
+        data: {
+          error: "FlagAlreadyExistsError",
+          message: `Flag with key '${error.key}' already exists`,
+        },
       })
     }
 
@@ -52,12 +56,14 @@ export default defineEventHandler(async (event) => {
       statusCode: 500,
       statusMessage: error._tag,
       message: error.message,
+      data: { error: error._tag, message: error.message },
     })
   }
 
   const flag = result.right
 
-  // Return success response
+  // Return success response with 201 Created status
+  setResponseStatus(event, 201)
   return {
     key: flag.key,
     defaultValue: flag.defaultValue,

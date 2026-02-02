@@ -134,9 +134,7 @@ describe("Feature Flag Evaluation Integration", () => {
       const rule: Rule = { op: "EQ", field: "userId", value: 123 }
       const emptyContext: Context = {}
 
-      const result = await Effect.runPromise(
-        evaluate(rule, emptyContext).pipe(Effect.either)
-      )
+      const result = await Effect.runPromise(evaluate(rule, emptyContext).pipe(Effect.either))
 
       expect(result._tag).toBe("Left")
       if (result._tag === "Left") {
@@ -164,9 +162,7 @@ describe("Feature Flag Evaluation Integration", () => {
       await Effect.runPromise(createFeatureFlag(input, repo1))
 
       // Try to create same flag in repo2 (should succeed - different repo)
-      const result = await Effect.runPromise(
-        createFeatureFlag(input, repo2).pipe(Effect.either)
-      )
+      const result = await Effect.runPromise(createFeatureFlag(input, repo2).pipe(Effect.either))
 
       expect(result._tag).toBe("Right")
 
@@ -220,7 +216,7 @@ describe("Feature Flag Evaluation Integration", () => {
 
       const program = Effect.all(
         inputs.map((input) => createFeatureFlag(input, repository)),
-        { concurrency: "unbounded" }
+        { concurrency: "unbounded" },
       )
 
       const results = await Effect.runPromise(program)
@@ -242,7 +238,7 @@ describe("Feature Flag Evaluation Integration", () => {
 
       const program = Effect.all(
         rules.map((rule) => evaluate(rule, context)),
-        { concurrency: "unbounded" }
+        { concurrency: "unbounded" },
       )
 
       const results = await Effect.runPromise(program)
@@ -259,12 +255,12 @@ describe("Feature Flag Evaluation Integration", () => {
         // Sequential operations
         const flag1 = yield* createFeatureFlag(
           { key: "flag-1", defaultValue: true, description: "First" },
-          repository
+          repository,
         )
 
         const flag2 = yield* createFeatureFlag(
           { key: "flag-2", defaultValue: false, description: "Second" },
-          repository
+          repository,
         )
 
         const exists1 = yield* repository.exists("flag-1")
@@ -288,13 +284,13 @@ describe("Feature Flag Evaluation Integration", () => {
         // Try invalid operation
         const result1 = yield* createFeatureFlag(
           { key: "INVALID_KEY", defaultValue: true, description: "Test" },
-          repository
+          repository,
         ).pipe(Effect.either)
 
         // Try valid operation
         const result2 = yield* createFeatureFlag(
           { key: "valid-key", defaultValue: true, description: "Test" },
-          repository
+          repository,
         ).pipe(Effect.either)
 
         return { result1, result2 }

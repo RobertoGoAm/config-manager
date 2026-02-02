@@ -18,6 +18,9 @@ This project enforces **Hexagonal Architecture** at the **TypeScript compiler le
 # Install dependencies (requires Node 22.20+)
 pnpm install
 
+# Install git hooks (runs quality checks before push)
+cp .githooks/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push
+
 # Run tests
 pnpm test
 
@@ -33,6 +36,35 @@ pnpm check
 # Start dev server
 pnpm dev
 ```
+
+### Git Hooks
+
+This project uses a **pre-push hook** to ensure all quality checks pass before pushing:
+
+- Runs `pnpm check` (typecheck + lint + format + tests) before every push
+- Prevents pushing broken code to remote
+- Can be skipped with `git push --no-verify` (not recommended)
+
+**Installation:**
+
+```bash
+# Option 1: Use the npm script (recommended)
+pnpm install-hooks
+
+# Option 2: Run the script directly
+bash scripts/install-hooks.sh
+
+# Option 3: Manual installation
+cp .githooks/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push
+```
+
+**What gets checked:**
+
+- TypeScript type checking
+- ESLint (functional programming rules)
+- Prettier formatting
+- OpenAPI validation
+- All tests (unit, integration, contract)
 
 ## Project Structure
 
@@ -64,6 +96,7 @@ config-manager/
 **Apps** = Deployment targets (server, web, mobile, etc.)
 
 **Why this structure?**
+
 1. **Nuxt integration**: Future `apps/web/` can import `@domain`, `@infrastructure`, `@api`
 2. **Flexible deployment**: Run as monolith OR split into microservices
 3. **Easy migration**: Replace frontend without touching business logic
@@ -92,6 +125,7 @@ import { InMemoryRepo } from "@infrastructure/..." // ❌ BUILD FAILS!
 ```
 
 **This means:**
+
 - AI cannot accidentally violate hexagonal architecture
 - Refactoring is safe - TypeScript enforces boundaries
 - No runtime surprises from circular dependencies
@@ -139,6 +173,7 @@ const result = evaluate(rule, context)
 ## Testing
 
 **58 tests across 4 test types:**
+
 - **24 contract tests** - API stability
 - **10 integration tests** - Cross-layer composition
 - **24 unit tests** - Property-based with `fast-check`

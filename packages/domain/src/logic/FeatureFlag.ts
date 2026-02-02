@@ -59,37 +59,45 @@ export const createFeatureFlag = (
         new InvalidFlagKeyError({
           key: input.key,
           reason: "Key must be kebab-case: lowercase alphanumeric characters separated by hyphens",
-        })
+        }),
       )
     }
 
-    // Validate description is non-empty after trimming
+    // Validate description exists and is non-empty after trimming
+    if (!input.description || typeof input.description !== "string") {
+      return yield* Effect.fail(
+        new InvalidFlagDescriptionError({
+          description: String(input.description || ""),
+          reason: "Description is required and must be a string",
+        }),
+      )
+    }
+
+    // Security: Enforce length limit BEFORE trimming to prevent DoS attacks
+    // (attacker could send 10MB of whitespace that trims to valid length)
+    if (input.description.length > 500) {
+      return yield* Effect.fail(
+        new InvalidFlagDescriptionError({
+          description: input.description,
+          reason: "Description cannot exceed 500 characters",
+        }),
+      )
+    }
+
     const trimmedDescription = input.description.trim()
     if (trimmedDescription.length === 0) {
       return yield* Effect.fail(
         new InvalidFlagDescriptionError({
           description: input.description,
           reason: "Description cannot be empty",
-        })
-      )
-    }
-
-    // Security: Enforce length limit to prevent DoS attacks
-    if (trimmedDescription.length > 500) {
-      return yield* Effect.fail(
-        new InvalidFlagDescriptionError({
-          description: input.description,
-          reason: "Description cannot exceed 500 characters",
-        })
+        }),
       )
     }
 
     // Check uniqueness constraint
     const flagExists = yield* repository.exists(input.key)
     if (flagExists) {
-      return yield* Effect.fail(
-        new FlagAlreadyExistsError({ key: input.key })
-      )
+      return yield* Effect.fail(new FlagAlreadyExistsError({ key: input.key }))
     }
 
     // Construct flag with creation timestamp and trimmed description

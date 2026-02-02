@@ -8,8 +8,7 @@ import type { Rule, Context } from "@domain/schema/Rule.js"
  * Fast-check arbitraries for generating random Rules and Contexts
  */
 
-const arbitraryContext = (): fc.Arbitrary<Context> =>
-  fc.dictionary(fc.string(), fc.anything())
+const arbitraryContext = (): fc.Arbitrary<Context> => fc.dictionary(fc.string(), fc.anything())
 
 const arbitraryRule = (depth = 0): fc.Arbitrary<Rule> => {
   const eqRule = fc.record({
@@ -38,7 +37,9 @@ const arbitraryRule = (depth = 0): fc.Arbitrary<Rule> => {
 /**
  * Helper to run an Effect and extract the result
  */
-const runEffect = <A, E>(effect: Effect.Effect<A, E>): { success: true; value: A } | { success: false; error: E } => {
+const runEffect = <A, E>(
+  effect: Effect.Effect<A, E>,
+): { success: true; value: A } | { success: false; error: E } => {
   const exit = Effect.runSyncExit(effect)
 
   if (exit._tag === "Success") {
@@ -83,12 +84,11 @@ describe("Evaluator", () => {
           } else {
             // Errors must be typed
             expect(
-              result.error._tag === "FieldNotFoundError" ||
-              result.error._tag === "EmptyRulesError"
+              result.error._tag === "FieldNotFoundError" || result.error._tag === "EmptyRulesError",
             ).toBe(true)
           }
         }),
-        { numRuns: 1000 }
+        { numRuns: 1000 },
       )
     })
 
@@ -104,30 +104,25 @@ describe("Evaluator", () => {
             expect(result.value).toBe(true)
           }
         }),
-        { numRuns: 1000 }
+        { numRuns: 1000 },
       )
     })
 
     it("EQ rule with non-matching value should always return false", () => {
       fc.assert(
-        fc.property(
-          fc.string(),
-          fc.string(),
-          fc.string(),
-          (field, value1, value2) => {
-            fc.pre(value1 !== value2) // Precondition: values must be different
+        fc.property(fc.string(), fc.string(), fc.string(), (field, value1, value2) => {
+          fc.pre(value1 !== value2) // Precondition: values must be different
 
-            const rule: Rule = { op: "EQ", field, value: value1 }
-            const context: Context = { [field]: value2 }
+          const rule: Rule = { op: "EQ", field, value: value1 }
+          const context: Context = { [field]: value2 }
 
-            const result = runEffect(evaluate(rule, context))
+          const result = runEffect(evaluate(rule, context))
 
-            if (result.success) {
-              expect(result.value).toBe(false)
-            }
+          if (result.success) {
+            expect(result.value).toBe(false)
           }
-        ),
-        { numRuns: 1000 }
+        }),
+        { numRuns: 1000 },
       )
     })
 
@@ -141,9 +136,7 @@ describe("Evaluator", () => {
           }))
 
           const andRule: Rule = { op: "AND", rules }
-          const context: Context = Object.fromEntries(
-            fields.map((field) => [field, "test"])
-          )
+          const context: Context = Object.fromEntries(fields.map((field) => [field, "test"]))
 
           const result = runEffect(evaluate(andRule, context))
 
@@ -151,7 +144,7 @@ describe("Evaluator", () => {
             expect(result.value).toBe(true)
           }
         }),
-        { numRuns: 1000 }
+        { numRuns: 1000 },
       )
     })
 
@@ -170,18 +163,16 @@ describe("Evaluator", () => {
             }))
 
             const orRule: Rule = { op: "OR", rules }
-            const context: Context = Object.fromEntries(
-              fields.map((field) => [field, "match"])
-            )
+            const context: Context = Object.fromEntries(fields.map((field) => [field, "match"]))
 
             const result = runEffect(evaluate(orRule, context))
 
             if (result.success) {
               expect(result.value).toBe(true)
             }
-          }
+          },
         ),
-        { numRuns: 1000 }
+        { numRuns: 1000 },
       )
     })
   })

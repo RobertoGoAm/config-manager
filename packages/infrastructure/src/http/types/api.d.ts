@@ -4,160 +4,160 @@
  */
 
 export interface paths {
-    "/api/flags": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Create a new feature flag
-         * @description Creates a new feature flag with validation:
-         *     - Key must be kebab-case (lowercase alphanumeric with hyphens)
-         *     - Description must be non-empty and max 500 characters
-         *     - Key must be unique
-         */
-        post: operations["createFeatureFlag"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
+  "/api/flags": {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Create a new feature flag
+     * @description Creates a new feature flag with validation:
+     *     - Key must be kebab-case (lowercase alphanumeric with hyphens)
+     *     - Description must be non-empty and max 500 characters
+     *     - Key must be unique
+     */
+    post: operations["createFeatureFlag"]
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
-export type webhooks = Record<string, never>;
+export type webhooks = Record<string, never>
 export interface components {
-    schemas: {
-        CreateFlagInput: {
-            /**
-             * @description Kebab-case identifier (lowercase alphanumeric with hyphens)
-             * @example dark-mode
-             */
-            key: string;
-            /**
-             * @description Default value for the feature flag
-             * @example false
-             */
-            defaultValue: boolean;
-            /**
-             * @description Human-readable description of the feature flag
-             * @example Enable dark mode theme for users
-             */
-            description: string;
-        };
-        FeatureFlag: {
-            /**
-             * @description Kebab-case identifier
-             * @example dark-mode
-             */
-            key: string;
-            /**
-             * @description Default value for the feature flag
-             * @example false
-             */
-            defaultValue: boolean;
-            /**
-             * @description Human-readable description
-             * @example Enable dark mode theme for users
-             */
-            description: string;
-            /**
-             * Format: date-time
-             * @description ISO 8601 timestamp of creation
-             * @example 2025-01-31T12:00:00.000Z
-             */
-            createdAt: string;
-        };
-        ValidationError: {
-            /**
-             * @description Error type identifier
-             * @enum {string}
-             */
-            error: "ValidationError" | "InvalidFlagKeyError" | "InvalidFlagDescriptionError";
-            /** @description Human-readable error message */
-            message: string;
-            /** @description Additional error details (for ValidationError only) */
-            details?: string;
-        };
-        ConflictError: {
-            /**
-             * @description Error type identifier
-             * @enum {string}
-             */
-            error: "FlagAlreadyExistsError";
-            /** @description Human-readable error message */
-            message: string;
-        };
-        ServerError: {
-            /**
-             * @description Error type identifier
-             * @enum {string}
-             */
-            error: "FlagRepositoryError";
-            /** @description Human-readable error message */
-            message: string;
-        };
-    };
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+  schemas: {
+    CreateFlagInput: {
+      /**
+       * @description Kebab-case identifier (lowercase alphanumeric with hyphens)
+       * @example dark-mode
+       */
+      key: string
+      /**
+       * @description Default value for the feature flag
+       * @example false
+       */
+      defaultValue: boolean
+      /**
+       * @description Human-readable description of the feature flag
+       * @example Enable dark mode theme for users
+       */
+      description: string
+    }
+    FeatureFlag: {
+      /**
+       * @description Kebab-case identifier
+       * @example dark-mode
+       */
+      key: string
+      /**
+       * @description Default value for the feature flag
+       * @example false
+       */
+      defaultValue: boolean
+      /**
+       * @description Human-readable description
+       * @example Enable dark mode theme for users
+       */
+      description: string
+      /**
+       * Format: date-time
+       * @description ISO 8601 timestamp of creation
+       * @example 2025-01-31T12:00:00.000Z
+       */
+      createdAt: string
+    }
+    ValidationError: {
+      /**
+       * @description Error type identifier
+       * @enum {string}
+       */
+      error: "ValidationError" | "InvalidFlagKeyError" | "InvalidFlagDescriptionError"
+      /** @description Human-readable error message */
+      message: string
+      /** @description Additional error details (for ValidationError only) */
+      details?: string
+    }
+    ConflictError: {
+      /**
+       * @description Error type identifier
+       * @enum {string}
+       */
+      error: "FlagAlreadyExistsError"
+      /** @description Human-readable error message */
+      message: string
+    }
+    ServerError: {
+      /**
+       * @description Error type identifier
+       * @enum {string}
+       */
+      error: "FlagRepositoryError"
+      /** @description Human-readable error message */
+      message: string
+    }
+  }
+  responses: never
+  parameters: never
+  requestBodies: never
+  headers: never
+  pathItems: never
 }
-export type $defs = Record<string, never>;
+export type $defs = Record<string, never>
 export interface operations {
-    createFeatureFlag: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateFlagInput"];
-            };
-        };
-        responses: {
-            /** @description Feature flag created successfully */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FeatureFlag"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ValidationError"];
-                };
-            };
-            /** @description Flag already exists */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConflictError"];
-                };
-            };
-            /** @description Internal server error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ServerError"];
-                };
-            };
-        };
-    };
+  createFeatureFlag: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateFlagInput"]
+      }
+    }
+    responses: {
+      /** @description Feature flag created successfully */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["FeatureFlag"]
+        }
+      }
+      /** @description Validation error */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["ValidationError"]
+        }
+      }
+      /** @description Flag already exists */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["ConflictError"]
+        }
+      }
+      /** @description Internal server error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          "application/json": components["schemas"]["ServerError"]
+        }
+      }
+    }
+  }
 }
